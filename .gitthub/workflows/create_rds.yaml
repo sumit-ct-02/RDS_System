@@ -1,0 +1,109 @@
+name: apply-terraform-ec2.yaml
+ 
+on:
+
+  workflow_dispatch:
+
+    inputs:
+      action:
+        description: 'Action to perform (Create/Delete)'
+        required: true
+        default: 'Create'
+
+      db_identifier:
+        description: 'RDS Instance Name'
+        required: true
+
+      engine:
+        description: 'Engine Name (Eg, postgres, mysql)'
+        required: true
+
+      security_group:
+        description: 'Security Group Name for the instance'
+        required: true
+
+      allowed_ports:
+
+        description: 'List of allowed inbound ports (comma separated)'
+
+        required: true
+
+      db_username:
+        description: 'Database Username'
+        required: true
+      
+      db_password:
+        description: 'Database Password'
+        required: true
+        sensitive: true
+
+      db_subnet_group_name:
+        description: 'Subnet Group Name'
+        required: true
+     
+
+      region:
+        description: 'AWS region'
+        required: true
+
+ 
+ 
+permissions:
+
+  id-token: write
+
+  contents: read
+ 
+jobs:
+
+  terraform_apply:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout code
+
+      uses: actions/checkout@v2
+ 
+    - name: Assume AWS Role using OIDC
+
+      uses: aws-actions/configure-aws-credentials@v1.7.0
+
+      with:
+
+        role-to-assume: arn:aws:iam::730335384723:role/backstage_interns_project
+
+        role-session-name: GitHub_to_AWS_via_FederatedOIDC
+
+        aws-region: ${{ github.event.inputs.region }}
+ 
+    - name: Setup Terraform
+
+      uses: hashicorp/setup-terraform@v1
+
+    - name: Terraform Init
+
+      run: terraform init
+ 
+    - name: Terraform Format
+
+      run: terraform fmt
+ 
+    - name: Terraform Validate
+
+      run: terraform validate
+ 
+    - name: Terraform Apply
+      
+      run: terraform apply \
+        -var action=${{ github.event.inputs.action }} \
+        -var db_identifier=${{ github.event.inputs.db_identifier }} \
+        -var engine=${{ github.event.inputs.engine }} \
+        -var security_group=${{ github.event.inputs.security_group }} \
+        -var allowed_ports="${{ github.event.inputs.allowed_ports }}" \
+        -var db_username=${{ github.event.inputs.db_username }} \
+        -var db_password=${{ github.event.inputs.db_password }} \
+        -var db_subnet_group_name=${{ github.event.inputs.db_subnet_group_name }} \
+        -var region=${{ github.event.inputs.region }} \
+        -auto-approve

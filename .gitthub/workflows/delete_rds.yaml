@@ -1,0 +1,58 @@
+name: delete_rds.yaml
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Action to perform (Create/Delete)'
+        required: true
+        default: 'Delete'
+      
+      rds_id:
+        description: 'RDS instance Id'
+        required: true
+
+      region:
+        description: 'AWS region'
+        required: true
+      
+
+
+permissions:
+
+  id-token: write
+
+  contents: read
+ 
+jobs:
+    terraform_destroy:
+
+      runs-on: ubuntu-latest
+      steps:
+
+      - name: Checkout code
+
+        uses: actions/checkout@v2
+
+      - name: Assume AWS Role using OIDC
+
+        uses: aws-actions/configure-aws-credentials@v1.7.0
+
+        with:
+
+          role-to-assume: arn:aws:iam::730335384723:role/backstage_interns_project
+
+          role-session-name: GitHub_to_AWS_via_FederatedOIDC
+
+          aws-region: ${{ github.event.inputs.region }}
+
+      - name: Setup Terraform
+
+        uses: hashicorp/setup-terraform@v1
+
+      - name: Terraform Init
+
+        run: terraform init
+
+      - name: Terraform Destroy
+
+        run: terraform destroy -var action=${{ github.event.inputs.action }} -var rds_id=${{ github.event.inputs.rds_id }} -var region=${{ github.event.inputs.region }} -auto-approve
