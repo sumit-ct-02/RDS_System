@@ -2,7 +2,7 @@ variable "region" {
     type = string
     default = "ap-south-1"
 }
-variable "db_identifier" {
+variable "db_identifier_delete" {
     type = string
     description = "DB Identifier to Delete RDS instance"
 }
