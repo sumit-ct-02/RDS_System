@@ -54,12 +54,6 @@ variable "engine" {
   type        = string
 }
 
-variable "engine_version" {
-  description = "The version of the database engine."
-  type        = string
-  default     = "15.2"
-}
-
 variable "instance_class" {
   description = "The instance class for the DB instance."
   type        = string
