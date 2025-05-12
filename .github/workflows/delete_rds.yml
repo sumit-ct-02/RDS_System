@@ -7,7 +7,7 @@ on:
         required: true
         default: 'Delete'
       
-      db_identifier:
+      db_identifier_delete:
         description: 'RDS DB Identifier'
         required: true
 
@@ -55,4 +55,4 @@ jobs:
 
       - name: Terraform Destroy
         working-directory: ./delete_rds
-        run: terraform destroy -var action=${{ github.event.inputs.action }} -var db_identifier=${{ github.event.inputs.db_identifier }} -var region=${{ github.event.inputs.region }} -auto-approve
+        run: terraform destroy -var action=${{ github.event.inputs.action }} -var db_identifier_delete=${{ github.event.inputs.db_identifier_delete }} -var region=${{ github.event.inputs.region }} -auto-approve
