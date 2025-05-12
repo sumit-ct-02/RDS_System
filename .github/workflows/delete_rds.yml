@@ -50,9 +50,9 @@ jobs:
         uses: hashicorp/setup-terraform@v1
 
       - name: Terraform Init
-
+        working-directory: ./create_rds
         run: terraform init
 
       - name: Terraform Destroy
-
+        working-directory: ./create_rds
         run: terraform destroy -var action=${{ github.event.inputs.action }} -var rds_id=${{ github.event.inputs.rds_id }} -var region=${{ github.event.inputs.region }} -auto-approve
