@@ -1,4 +1,4 @@
-name: apply-terraform-ec2.yaml
+name: create_rds.yml
  
 on:
 
