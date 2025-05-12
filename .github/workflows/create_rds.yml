@@ -96,6 +96,8 @@ jobs:
  
     - name: Terraform Apply
       
+      working-directory: ./create_rds
+      
       run: terraform apply -var action=${{ github.event.inputs.action }} -var db_identifier=${{ github.event.inputs.db_identifier }} -var engine=${{ github.event.inputs.engine }} -var security_group=${{ github.event.inputs.security_group }} -var allowed_ports=${{ github.event.inputs.allowed_ports }} -var db_username=${{ github.event.inputs.db_username }} -var db_password=${{ github.event.inputs.db_password }} -var db_subnet_group_name=${{ github.event.inputs.db_subnet_group_name }} -var region=${{ github.event.inputs.region }} -auto-approve
 
 
