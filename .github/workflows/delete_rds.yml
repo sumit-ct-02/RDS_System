@@ -1,4 +1,4 @@
-name: delete_rds.yaml
+name: delete_rds.yml
 on:
   workflow_dispatch:
     inputs:
